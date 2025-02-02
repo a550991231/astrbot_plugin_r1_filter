@@ -1,10 +1,5 @@
-# helloworld
+# deepseek-r1-filter
 
-AstrBot 插件模板
+这个插件可以选择是否显示 Deepseek-R1 模型产生的思考内容。
 
-A template plugin for AstrBot plugin feature
-
-# 支持
-
-[帮助文档](https://astrbot.soulter.top/center/docs/%E5%BC%80%E5%8F%91/%E6%8F%92%E4%BB%B6%E5%BC%80%E5%8F%91/
-)
+This plugin provides a way to show the reasoning content or not.
