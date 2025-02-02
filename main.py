@@ -1,13 +1,32 @@
-from astrbot.api.event import filter, AstrMessageEvent, MessageEventResult
+import re
+from astrbot.api.event import filter, AstrMessageEvent
 from astrbot.api.star import Context, Star, register
+from astrbot.api.provider import LLMResponse
+from openai.types.chat.chat_completion import ChatCompletion
 
-@register("helloworld", "Your Name", "一个简单的 Hello World 插件", "1.0.0")
-class MyPlugin(Star):
-    def __init__(self, context: Context):
+@register("r1-filter", "Soulter", "可选择是否过滤推理模型的思考内容", "1.0.0")
+class R1Filter(Star):
+    def __init__(self, context: Context, config: dict):
         super().__init__(context)
+        self.config = config
+        self.display_reasoning_text = self.config.get('display_reasoning_text', True)
     
-    # 注册指令的装饰器。指令名为 helloworld。注册成功后，发送 `/helloworld` 就会触发这个指令，并回复 `你好, {user_name}!`
-    @filter.command("helloworld")
-    async def helloworld(self, event: AstrMessageEvent):
-        user_name = event.get_sender_name()
-        yield event.plain_result(f"Hello, {user_name}!") # 发送一条纯文本消息
+    @filter.on_llm_response()
+    async def resp(self, event: AstrMessageEvent, response: LLMResponse):
+        if self.display_reasoning_text:
+            if response and response.raw_completion and isinstance(response.raw_completion, ChatCompletion):
+                if len(response.raw_completion.choices) \
+                    and response.raw_completion.choices[0].message \
+                    and hasattr(response.raw_completion.choices[0].message, 'reasoning_content'):
+                    message = response.raw_completion.choices[0].message
+                    response.completion_text = f"🤔思考：{message.reasoning_content}\n\n{message.content}"
+                    
+        else: 
+            # DeepSeek 官方的模型的思考存在了 reason_content 字段因此不需要过滤
+            completion_text = response.completion_text
+            # 适配 ollama deepseek-r1 模型
+            if r'<think>' in completion_text or r'</think>' in completion_text:
+                completion_text = re.sub(r'<think>.*?</think>', '', completion_text, flags=re.DOTALL).strip()
+                # 可能有单标签情况
+                completion_text = completion_text.replace(r'<think>', '').replace(r'</think>', '').strip()
+            response.completion_text = completion_text
