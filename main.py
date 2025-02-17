@@ -16,4 +16,4 @@ async def on_llm_resp(self, event: AstrMessageEvent, response: LLMResponse):
         end_index = response.completion_text.find(details_end) + len(details_end)
         response.completion_text = response.completion_text[:start_index] + response.completion_text[end_index:].strip()
 
-    return resp
+    return response
