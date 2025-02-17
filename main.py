@@ -33,7 +33,7 @@ class R1Filter(Star):
             return msg  # 如果正则处理失败，返回原始文本
 
     @filter.on_llm_response()
-    async def on_llm_resp(self, event: AstrMessageEvent, resp: LLMResponse):
+    async def on_llm_resp(self, event: AstrMessageEvent, response: LLMResponse):
         """
         处理 LLM 响应，移除其中的 details 标签。
         :param event: 消息事件
@@ -41,8 +41,3 @@ class R1Filter(Star):
         """
         if "<details" in response.completion_text:
             response.completion_text = self._remove_details_filter(response.completion_text) 
-    @filter.on_decorating_result()
-    async def on_decorating_result(self, event: AstrMessageEvent):
-        result = event.get_result()
-        chain = result.chain
-        chain.append(Plain("!123")) # 在消息链的最后添加一个感叹号
