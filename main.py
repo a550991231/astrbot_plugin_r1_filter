@@ -1,43 +1,43 @@
-import re
-from astrbot.api.event import filter, AstrMessageEvent
-from astrbot.api.star import Context, Star, register
-from astrbot.api.provider import LLMResponse
-from openai.types.chat.chat_completion import ChatCompletion
+导入​
+来自Jinja2进口环境，基本装载机
+来自actrbot.api.event进口过滤器，aStrmessageEvent
+从actrbot.api.star进口上下文，星星，注册
+来自actrbot.api.provider导入llmresponse
 
 @register("r1-filter", "Soulter", "可选择是否过滤推理模型的思考内容", "1.0.0", 'https://github.com/Soulter/astrbot_plugin_r1_filter')
-class R1Filter(Star):
-    def __init__(self, context: Context, config: dict):
-        super().__init__(context)
-        self.config = config
-        self.display_reasoning_text = self.config.get('display_reasoning_text', True)
-    
+R1Filter类（星）：
+    def  __init__ （自我，上下文：上下文，配置：dict ）：
+        极好的（）。__init__ （上下文）
+        自己。config = config
+        自己。display_reasoning_text = self。config。获取（'display_reasoning_text'，true ）
+        
+        # 初始化 Jinja2 环境并添加自定义过滤器
+        自己。env =环境（ loader = baseloader （））
+        自己。env。过滤器[ 'remove_think' ] = self。_remove_think_filter
+
+    def _remove_think_filter(self, msg: str) -> str:
+”“”
+        Jinja2 自定义过滤器，用于递归移除 <think> 标签。
+        :param msg: 原始文本
+        :return: 移除 <think> 标签后的文本
+        ”“”
+ r'<think [^>]*> [\ s \ s]*？</think>'
+        try:
+            # 一次性移除所有 <think> 标签（包括嵌套标签）
+
+            # 移除多余的空白行
+
+            return cleaned_msg
+        except re.error as e:
+            self.ap.logger.error(f"正则表达式处理失败: {e}")
+            return msg  # 如果正则处理失败，返回原始文本
+
     @filter.on_llm_response()
     async def resp(self, event: AstrMessageEvent, response: LLMResponse):
-        if self.display_reasoning_text:
-            if response and response.raw_completion and isinstance(response.raw_completion, ChatCompletion):
-                if len(response.raw_completion.choices) \
-                        and response.raw_completion.choices[0].message:
-                    message = response.raw_completion.choices[0].message
-                    reasoning_content = ""  # 初始化 reasoning_content
+”“”
+        处理 LLM 响应，移除其中的 <think> 标签。
+        :param event: 消息事件
+        :param response: LLM 响应
+        ”“”
 
-                    # 检查 Groq deepseek-r1-distill-llama-70b模型的 'reasoning' 属性
-                    if hasattr(message, 'reasoning') and message.reasoning:
-                        reasoning_content = message.reasoning
-                    # 检查 DeepSeek deepseek-reasoner模型的 'reasoning_content'
-                    elif hasattr(message, 'reasoning_content') and message.reasoning_content:
-                        reasoning_content = message.reasoning_content
-
-                    if reasoning_content:
-                        response.completion_text = f"🤔思考：{reasoning_content}\n\n{message.content}"
-                    else:
-                        response.completion_text = message.content
-                    
-        else: 
-            # DeepSeek 官方的模型的思考存在了 reason_content 字段因此不需要过滤
-            completion_text = response.completion_text
-            # 适配 ollama deepseek-r1 模型
-            if r'<think>' in completion_text or r'</think>' in completion_text:
-                completion_text = re.sub(r'<think>.*?</think>', '', completion_text, flags=re.DOTALL).strip()
-                # 可能有单标签情况
-                completion_text = completion_text.replace(r'<think>', '').replace(r'</think>', '').strip()
-            response.completion_text = completion_text
+            回复。plote_text = self。_remove_think_filter （响应。完成_text ）
