@@ -12,7 +12,7 @@ class R1Filter(Star):
         self.display_reasoning_text = self.config.get('display_reasoning_text', True)
     
     @filter.on_llm_response()
-async def on_llm_resp(self, event: AstrMessageEvent, response: LLMResponse):
+ async def resp(self, event: AstrMessageEvent, response: LLMResponse):
     # 定义要删除的 <details> 标签内容
     details_start = '<details style="color:gray;background-color: #f8f8f8;padding: 8px;border-radius: 4px;" open> <summary> Thinking... </summary>'
     details_end = '</details>'
