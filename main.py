@@ -1,6 +1,6 @@
 import re
 from jinja2 import Environment, BaseLoader
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup  # 引入 BeautifulSoup
 from astrbot.api.event import filter, AstrMessageEvent
 from astrbot.api.star import Context, Star, register
 from astrbot.api.provider import LLMResponse
@@ -12,30 +12,36 @@ class R1Filter(Star):
         self.config = config
         self.display_reasoning_text = self.config.get('display_reasoning_text', True)
         
-        # 从配置文件中获取自定义正则表达式，如果没有则使用默认值
-        self.pattern = self.config.get('custom_regex', r'<details[^>]*>[\s\S]*?</details>')
-        
         # 初始化 Jinja2 环境并添加自定义过滤器
         self.env = Environment(loader=BaseLoader())
-        self.env.filters['remove_think'] = self._remove_think_filter
+        self.env.filters['remove_details'] = self._remove_details_filter
 
-    #def _remove_think_filter(self, msg: str) -> str:
-        #try:
-            # 使用配置文件中的正则表达式移除所有匹配的标签（包括嵌套标签）
-           # cleaned_msg = re.sub(self.pattern, '', msg)
-            # 移除多余的空白行
-           # cleaned_msg = re.sub(r'\n\s*\n', '\n', cleaned_msg.strip())
-           # return cleaned_msg
-       # except re.error as e:
-          #  self.ap.logger.error(f"正则表达式处理失败: {e}")
-           # return msg  # 如果正则处理失败，返回原始文本
     def _remove_details_filter(self, msg: str) -> str:
-        soup = BeautifulSoup(msg, 'html.parser')
-        for details in soup.find_all('details'):
-            details.decompose()  # 移除 details 标签及其内容
-        return str(soup))
+        """
+        使用 BeautifulSoup 移除 details 标签及其内容。
+        :param msg: 原始文本
+        :return: 移除 details 标签后的文本
+        """
+        try:
+            # 使用 BeautifulSoup 解析 HTML
+            soup = BeautifulSoup(msg, 'html.parser')
+            
+            # 查找所有的 <details> 标签并移除
+            for details in soup.find_all('details'):
+                details.decompose()  # 移除标签及其内容
+            
+            # 返回处理后的文本
+            return str(soup)
+        except Exception as e:
+            self.ap.logger.error(f"HTML 解析失败: {e}")
+            return msg  # 如果处理失败，返回原始文本
 
     @filter.on_llm_response()
     async def resp(self, event: AstrMessageEvent, response: LLMResponse):
-        if re.search(self.pattern, response.completion_text):
-           response.completion_text = self._remove_think_filter(response.completion_text)
+        """
+        处理 LLM 响应，移除其中的 details 标签。
+        :param event: 消息事件
+        :param response: LLM 响应
+        """
+        if "<details" in response.completion_text:
+            response.completion_text = self._remove_details_filter(response.completion_text)
