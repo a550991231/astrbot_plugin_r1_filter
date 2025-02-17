@@ -14,4 +14,4 @@ async def on_llm_resp(self, event: AstrMessageEvent, resp: LLMResponse):
         flags=re.DOTALL  # 允许 . 匹配换行符
     ).strip()  # 去除多余的空格
 
-    return resp
+
