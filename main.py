@@ -12,7 +12,7 @@ class R1Filter(Star):
         self.display_reasoning_text = self.config.get('display_reasoning_text', True)
         
         # 从配置文件中获取自定义正则表达式，如果没有则使用默认值
-        self.pattern = self.config.get('custom_regex', r'<think[^>]*>[\s\S]*?</think>')
+        self.pattern = self.config.get('custom_regex', r'<details[^>]*>[\s\S]*?</details>')
         
         # 初始化 Jinja2 环境并添加自定义过滤器
         self.env = Environment(loader=BaseLoader())
