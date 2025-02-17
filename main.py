@@ -39,5 +39,5 @@ class R1Filter(Star):
         :param event: 消息事件
         :param response: LLM 响应
         """
-        if "<details" in response.completion_text:
-            response.completion_text = self._remove_details_filter(response.completion_text) 
+        if "<details" in completion_text:
+            response.completion_text = self._remove_details_filter(completion_text) 
