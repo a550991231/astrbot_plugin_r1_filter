@@ -30,11 +30,10 @@ class R1Filter(Star):
     @filter.on_llm_response()
     async def on_llm_resp(self, event: AstrMessageEvent, response: LLMResponse):
 
-      msg = response.completion_text
-      print(msg)
-      file_name = "output.txt"  # 文件名
-      with open(file_name, "w", encoding="utf-8") as file:
-          file.write(text)
+      msg = "".join(response.completion_text)
+        if "<details" in msg:
+            response.completion_text = self._remove_details_filter(response.completion_text)
+
 
         
       
