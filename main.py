@@ -11,7 +11,7 @@ class R1Filter(Star):
         self.display_reasoning_text = self.config.get('display_reasoning_text', True)
     
     @filter.on_llm_response()
-    async def resp(self, event: AstrMessageEvent, response: LLMResponse):
+    async def on_llm_resp(self, event: AstrMessageEvent, response: LLMResponse):
         if self.display_reasoning_text:
             if response and response.raw_completion and isinstance(response.raw_completion, ChatCompletion):
                 if len(response.raw_completion.choices) \
