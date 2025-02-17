@@ -32,7 +32,9 @@ class R1Filter(Star):
 
       msg = response.completion_text
       print(msg)
-
+      file_name = "output.txt"  # 文件名
+      with open(file_name, "w", encoding="utf-8") as file:
+          file.write(text)
 
         
       
