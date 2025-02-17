@@ -13,7 +13,7 @@ class R1Filter(Star):
     
     @filter.on_llm_response()
  async def resp(self, event: AstrMessageEvent, response: LLMResponse):
-    # 定义要删除的 <details> 标签内容
+     # 定义要删除的 <details> 标签内容
     details_start = '<details style="color:gray;background-color: #f8f8f8;padding: 8px;border-radius: 4px;" open> <summary> Thinking... </summary>'
     details_end = '</details>'
 
