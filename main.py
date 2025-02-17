@@ -29,7 +29,7 @@ class R1Filter(Star):
 
     @filter.on_llm_response()
     async def on_llm_resp(self, event: AstrMessageEvent, response: LLMResponse):
-        logger.debug(f"LLMResponse: {response.completion_text}")
+        logger.debug(f"LLMResponse: {LLMResponse}")
         msg = "".join(completion_text)
         if "<details" in msg:
             response.completion_text = self._remove_details_filter(msg)
