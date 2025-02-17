@@ -29,11 +29,7 @@ class R1Filter(Star):
 
     @filter.on_llm_response()
   #  async def on_llm_resp(self, event: AstrMessageEvent, response: LLMResponse):
-        """
-        处理 LLM 响应，移除其中的 details 标签。
-        :param event: 消息事件
-        :param response: LLM 响应
-        """
+
   #      msg = response.completion_text
   #      response.completion_text = self._remove_details_filter(msg) 
        # event.send(response.completion_text
