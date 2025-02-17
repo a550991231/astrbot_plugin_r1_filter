@@ -19,16 +19,16 @@ class R1Filter(Star):
         self.env = Environment(loader=BaseLoader())
         self.env.filters['remove_think'] = self._remove_think_filter
 
-    def _remove_think_filter(self, msg: str) -> str:
-        try:
+    #def _remove_think_filter(self, msg: str) -> str:
+        #try:
             # 使用配置文件中的正则表达式移除所有匹配的标签（包括嵌套标签）
-            cleaned_msg = re.sub(self.pattern, '', msg)
+           # cleaned_msg = re.sub(self.pattern, '', msg)
             # 移除多余的空白行
-            cleaned_msg = re.sub(r'\n\s*\n', '\n', cleaned_msg.strip())
-            return cleaned_msg
-        except re.error as e:
-            self.ap.logger.error(f"正则表达式处理失败: {e}")
-            return msg  # 如果正则处理失败，返回原始文本
+           # cleaned_msg = re.sub(r'\n\s*\n', '\n', cleaned_msg.strip())
+           # return cleaned_msg
+       # except re.error as e:
+          #  self.ap.logger.error(f"正则表达式处理失败: {e}")
+           # return msg  # 如果正则处理失败，返回原始文本
     def _remove_details_filter(self, msg: str) -> str:
     """
     使用 BeautifulSoup 移除 details 标签。
