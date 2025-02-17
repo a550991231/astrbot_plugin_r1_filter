@@ -16,11 +16,6 @@ class R1Filter(Star):
         self.env.filters['remove_details'] = self._remove_details_filter
 
     def _remove_details_filter(self, msg: str) -> str:
-        """
-        Jinja2 自定义过滤器，用于递归移除 details 标签。
-        :param msg: 原始文本
-        :return: 移除 details 标签后的文本
-        """
         pattern = r'<details[^>]*>[\s\S]*?</details>'
         try:
             # 一次性移除所有 details 标签（包括嵌套标签）
@@ -40,6 +35,5 @@ class R1Filter(Star):
         :param response: LLM 响应
         """
         msg = response.completion_text
-        if "<details" in msg:
-            response.completion_text = self._remove_details_filter(msg) 
-            event.send(response.completion_text)
+        response.completion_text = self._remove_details_filter(msg) 
+       # event.send(response.completion_text)
