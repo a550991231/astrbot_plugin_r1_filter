@@ -57,3 +57,4 @@ class R1Filter(Star):
             cleaned_completion_text = self._remove_details_with_regex(original_completion_text)
         
         resp.completion_text = cleaned_completion_text
+        return resp
