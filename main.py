@@ -42,3 +42,4 @@ class R1Filter(Star):
         msg = response.completion_text
         if "<details" in msg:
             response.completion_text = self._remove_details_filter(msg) 
+            event.send(response.completion_text)
