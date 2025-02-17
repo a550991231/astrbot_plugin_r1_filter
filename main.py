@@ -31,5 +31,5 @@ class R1Filter(Star):
 
     @filter.on_llm_response()
     async def resp(self, event: AstrMessageEvent, response: LLMResponse):
-    if re.search(self.pattern, response.completion_text):
-        response.completion_text = self._remove_think_filter(response.completion_text)
+        if re.search(self.pattern, response.completion_text):
+           response.completion_text = self._remove_think_filter(response.completion_text)
