@@ -45,8 +45,8 @@ class R1Filter(Star):
             return msg  # 如果处理失败，返回原始文本
 
     @filter.on_llm_response()
-    async def on_llm_resp(self, event: AstrMessageEvent, response: LLMResponse):
-        original_completion_text = response.completion_text
+    async def on_llm_resp(self, event: AstrMessageEvent, resp: LLMResponse):
+        original_completion_text = resp.completion_text
         
         # 首先尝试使用 BeautifulSoup
         cleaned_completion_text = self._remove_details(original_completion_text)
@@ -56,4 +56,4 @@ class R1Filter(Star):
             logger.warning("BeautifulSoup 未能完全移除 <details> 标签，使用正则表达式进行二次处理。")
             cleaned_completion_text = self._remove_details_with_regex(original_completion_text)
         
-        response.completion_text = cleaned_completion_text
+        resp.completion_text = cleaned_completion_text
