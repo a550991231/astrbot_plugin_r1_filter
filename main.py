@@ -1,4 +1,8 @@
+import re
+from astrbot.api.event import filter, AstrMessageEvent
+from astrbot.api.star import Context, Star, register
 from astrbot.api.provider import LLMResponse
+from openai.types.chat.chat_completion import ChatCompletion
 
 @filter.on_llm_response()
 async def on_llm_resp(self, event: AstrMessageEvent, response: LLMResponse):
