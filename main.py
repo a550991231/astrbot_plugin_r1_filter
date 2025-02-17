@@ -44,6 +44,6 @@ class R1Filter(Star):
     @filter.on_decorating_result()
     async def on_decorating_result(self, event: AstrMessageEvent):
         result = event.get_result()
-    chain = result.chain
+        chain = result.chain
         print(chain) # 打印消息链
         chain.append(Plain("!")) # 在消息链的最后添加一个感叹号
