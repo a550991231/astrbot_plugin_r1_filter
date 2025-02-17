@@ -27,16 +27,14 @@ class R1Filter(Star):
             self.ap.logger.error(f"正则表达式处理失败: {e}")
             return msg  # 如果正则处理失败，返回原始文本
 
-   # @filter.on_llm_response()
-  #  async def on_llm_resp(self, event: AstrMessageEvent, response: LLMResponse):
+    @filter.on_llm_response()
+    async def on_llm_resp(self, event: AstrMessageEvent, response: LLMResponse):
 
-  #      msg = response.completion_text
-  #      response.completion_text = self._remove_details_filter(msg) 
-       # event.send(response.completion_text
-    @filter.on_decorating_result()
-    async def on_decorating_result(self, event: AstrMessageEvent):
-        result = event.get_result()
-        chain = self._remove_details_filter(result.chain)
+      msg = response.completion_text
+        print(msg)
+      response.completion_text = self._remove_details_filter(msg) 
+        event.send(response.completion_text)
+
         
       
 
