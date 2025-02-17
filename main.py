@@ -5,15 +5,13 @@ from astrbot.api.provider import LLMResponse
 from openai.types.chat.chat_completion import ChatCompletion
 
 @filter.on_llm_response()
-async def on_llm_resp(self, event: AstrMessageEvent, response: LLMResponse):
-    # 定义要删除的 <details> 标签内容
-    details_start = '<details style="color:gray;background-color: #f8f8f8;padding: 8px;border-radius: 4px;" open> <summary> Thinking... </summary>'
-    details_end = '</details>'
+async def on_llm_resp(self, event: AstrMessageEvent, resp: LLMResponse):
+    # 使用正则表达式删除 <details> 标签及其内容
+    resp.completion_text = re.sub(
+        r'<details[^>]*>.*?</details>',  # 匹配 <details> 标签及其内容
+        '',  # 替换为空字符串
+        resp.completion_text,  # 要处理的文本
+        flags=re.DOTALL  # 允许 . 匹配换行符
+    ).strip()  # 去除多余的空格
 
-    # 删除 <details> 标签及其内容
-    if details_start in response.completion_text and details_end in response.completion_text:
-        start_index = response.completion_text.find(details_start)
-        end_index = response.completion_text.find(details_end) + len(details_end)
-        response.completion_text = response.completion_text[:start_index] + response.completion_text[end_index:].strip()
-
-    return response
+    return resp
