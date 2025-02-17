@@ -2,7 +2,7 @@ import re
 from jinja2 import Environment, BaseLoader
 from astrbot.api.event import filter, AstrMessageEvent
 from astrbot.api.star import Context, Star, register
-from astrbot.api.provider import DifResponse
+from astrbot.api.provider import LLMResponse
 
 @register("r1-filter", "Soulter", "过滤内容", "1.0.0", 'https://github.com/a550991231/astrbot_plugin_r1_filter')
 class R1Filter(Star):
@@ -30,6 +30,6 @@ class R1Filter(Star):
             return msg  # 如果正则处理失败，返回原始文本
 
     @filter.on_llm_response()
-    async def resp(self, event: AstrMessageEvent, response: DifResponse):
+    async def resp(self, event: AstrMessageEvent, response: LLMResponse):
         if re.search(self.pattern, response.completion_text):
            response.completion_text = self._remove_think_filter(response.completion_text)
