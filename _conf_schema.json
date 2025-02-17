@@ -1,14 +1,16 @@
 {
     "display_reasoning_text": {
-        "description": "显示思考内容",
-        "type": "bool"
+        "description": "是否显示思考内容",
+        "type": "bool",
+        "default": false
     },
     "remove_tags": {
         "description": "需要删除的标签及其正则规则",
         "type": "dict",
         "default": {
             "think": "<think[^>]*>[\\s\\S]*?</think>",
-            "details": "<details[^>]*>[\\s\\S]*?</details>"
+            "details": "<details[^>]*>[\\s\\S]*?</details>",
+            "custom_tag": "<custom[^>]*>[\\s\\S]*?</custom>"
         }
     }
 }
