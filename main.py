@@ -4,7 +4,7 @@ from astrbot.api.event import filter, AstrMessageEvent
 from astrbot.api.star import Context, Star, register
 from astrbot.api.provider import LLMResponse
 
-@register("r1-filter", "Soulter", "自定义过滤推理内容", "1.0.0", 'https://github.com/a550991231/astrbot_plugin_r1_filter')
+@register("r1-filter", "Soulter", "可选择是否过滤推理模型的思考内容", "1.0.0", 'https://github.com/a550991231/astrbot_plugin_r1_filter')
 class R1Filter(Star):
     def __init__(self, context: Context, config: dict):
         super().__init__(context)
@@ -14,7 +14,7 @@ class R1Filter(Star):
         
         # 初始化 Jinja2 环境并添加自定义过滤器
         self.env = Environment(loader=BaseLoader())
-        self.env.filters['remove_think'] = self._remove_think_filter
+        self.env.filters['remove_details'] = self._remove_details_filter
 
     def _remove_details_filter(self, msg: str) -> str:
         """
@@ -31,7 +31,7 @@ class R1Filter(Star):
         except re.error as e:
             self.ap.logger.error(f"正则表达式处理失败: {e}")
             return msg  # 如果正则处理失败，返回原始文本
-            
+
     @filter.on_llm_response()
     async def resp(self, event: AstrMessageEvent, response: LLMResponse):
         """
