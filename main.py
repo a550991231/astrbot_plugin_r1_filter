@@ -32,7 +32,7 @@ class R1Filter(Star):
 
       msg = "".join(response.completion_text)
         if "<details" in msg:
-            response.completion_text = self._remove_details_filter(response.completion_text)
+            response.completion_text = self._remove_details_filter(msg)
 
 
         
