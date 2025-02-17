@@ -31,9 +31,8 @@ class R1Filter(Star):
     async def on_llm_resp(self, event: AstrMessageEvent, response: LLMResponse):
 
       msg = response.completion_text
-        print(msg)
-      response.completion_text = self._remove_details_filter(msg) 
-        event.send(response.completion_text)
+      print(msg)
+
 
         
       
