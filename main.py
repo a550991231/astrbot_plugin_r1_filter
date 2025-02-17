@@ -33,7 +33,7 @@ class R1Filter(Star):
   #      msg = response.completion_text
   #      response.completion_text = self._remove_details_filter(msg) 
        # event.send(response.completion_text
-  @filter.on_llm_response():
+  @filter.on_llm_response()
   async def on_llm_resp(self, event: AstrMessageEvent):  
       result = event.get_result()
       chain = self._remove_details_filter(result.chain)
