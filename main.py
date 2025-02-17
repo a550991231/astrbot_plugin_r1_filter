@@ -30,13 +30,8 @@ class R1Filter(Star):
           #  self.ap.logger.error(f"正则表达式处理失败: {e}")
            # return msg  # 如果正则处理失败，返回原始文本
     def _remove_details_filter(self, msg: str) -> str:
-    """
-    使用 BeautifulSoup 移除 details 标签。
-    :param msg: 原始文本
-    :return: 移除 details 标签后的文本
-    """
-    soup = BeautifulSoup(msg, 'html.parser')
-    for details in soup.find_all('details'):
+        soup = BeautifulSoup(msg, 'html.parser')
+        for details in soup.find_all('details'):
         details.decompose()  # 移除 details 标签及其内容
     return str(soup)
 
