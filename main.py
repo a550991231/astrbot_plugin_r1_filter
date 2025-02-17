@@ -11,6 +11,9 @@ class R1Filter(Star):
         self.config = config
         self.display_reasoning_text = self.config.get('display_reasoning_text', True)
         
+        # 从配置文件中获取自定义正则表达式，如果没有则使用默认值
+        self.pattern = self.config.get('custom_regex', r'<think[^>]*>[\s\S]*?</think>')
+        
         # 初始化 Jinja2 环境并添加自定义过滤器
         self.env = Environment(loader=BaseLoader())
         self.env.filters['remove_think'] = self._remove_think_filter
@@ -21,10 +24,9 @@ class R1Filter(Star):
         :param msg: 原始文本
         :return: 移除 <think> 标签后的文本
         """
-        pattern = r'<think[^>]*>[\s\S]*?</think>'
         try:
-            # 一次性移除所有 <think> 标签（包括嵌套标签）
-            cleaned_msg = re.sub(pattern, '', msg)
+            # 使用配置文件中的正则表达式移除所有匹配的标签（包括嵌套标签）
+            cleaned_msg = re.sub(self.pattern, '', msg)
             # 移除多余的空白行
             cleaned_msg = re.sub(r'\n\s*\n', '\n', cleaned_msg.strip())
             return cleaned_msg
