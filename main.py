@@ -32,8 +32,8 @@ class R1Filter(Star):
     def _remove_details_filter(self, msg: str) -> str:
         soup = BeautifulSoup(msg, 'html.parser')
         for details in soup.find_all('details'):
-        details.decompose()  # 移除 details 标签及其内容
-    return str(soup)
+            details.decompose()  # 移除 details 标签及其内容
+        return str(soup))
 
     @filter.on_llm_response()
     async def resp(self, event: AstrMessageEvent, response: LLMResponse):
