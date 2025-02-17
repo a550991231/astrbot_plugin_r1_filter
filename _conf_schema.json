@@ -1,6 +1,6 @@
 {
     "display_reasoning_text": {
-        "description": "显示思考内容",
+        "description": "开启匹配删除",
         "type": "bool",
         "value": false
     },
