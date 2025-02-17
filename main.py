@@ -19,11 +19,6 @@ class R1Filter(Star):
         self.env.filters['remove_think'] = self._remove_think_filter
 
     def _remove_think_filter(self, msg: str) -> str:
-        """
-        Jinja2 自定义过滤器，用于递归移除 <think> 标签。
-        :param msg: 原始文本
-        :return: 移除 <think> 标签后的文本
-        """
         try:
             # 使用配置文件中的正则表达式移除所有匹配的标签（包括嵌套标签）
             cleaned_msg = re.sub(self.pattern, '', msg)
@@ -36,10 +31,5 @@ class R1Filter(Star):
 
     @filter.on_llm_response()
     async def resp(self, event: AstrMessageEvent, response: LLMResponse):
-        """
-        处理 LLM 响应，移除其中的 <think> 标签。
-        :param event: 消息事件
-        :param response: LLM 响应
-        """
-        if "<think" in response.completion_text:
-            response.completion_text = self._remove_think_filter(response.completion_text)
+    if re.search(self.pattern, response.completion_text):
+        response.completion_text = self._remove_think_filter(response.completion_text)
