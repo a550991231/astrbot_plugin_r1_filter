@@ -13,8 +13,8 @@ class R1Filter(Star):
     
     @filter.on_llm_response()
     async def resp(self, event: AstrMessageEvent, resp: LLMResponse):
-        completion_text = resp.completion_text
-        completion_text = re.sub(r'<think>.*?</think>', '', completion_text, flags=re.DOTALL).strip()
+        #completion_text = resp.completion_text
+        #completion_text = re.sub(r'<think>.*?</think>', '', completion_text, flags=re.DOTALL).strip()
         resp.completion_text = "123456"
         
         
