@@ -39,4 +39,5 @@ class R1Filter(Star):
             if r'<details' in completion_text or r'</details>' in completion_text:
                 completion_text = re.sub(r'<details[^>]*>[\s\S]*?</details>', '', completion_text, flags=re.DOTALL).strip()
                 # 可能有单标签情况
+                completion_text += " 测试1231"
             response.completion_text = completion_text
