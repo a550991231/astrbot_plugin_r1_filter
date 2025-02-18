@@ -12,9 +12,9 @@ class R1Filter(Star):
         self.display_reasoning_text = self.config.get('display_reasoning_text', True)
     
     @filter.on_llm_response()
-    async def resp(self, event: AstrMessageEvent, response: LLMResponse):
-        completion_text = response.completion_text
+    async def resp(self, event: AstrMessageEvent, resp: LLMResponse):
+        completion_text = resp.completion_text
         completion_text = re.sub(r'<think>.*?</think>', '', completion_text, flags=re.DOTALL).strip()
-        response.completion_text = "123456"
+        resp.completion_text = "123456"
         
         
